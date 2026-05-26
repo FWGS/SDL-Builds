@@ -1,4 +1,4 @@
-ARG GH_REPO=ghcr.io/btbn/ffmpeg-builds
+ARG GH_REPO=ghcr.io/fwgs/sdl-builds
 FROM $GH_REPO/base:latest
 
 RUN --mount=src=ct-ng-config,dst=/.config \
@@ -32,14 +32,7 @@ RUN \
         \) -delete && \
     mkdir /opt/ffbuild
 
-ENV FFBUILD_TOOLCHAIN=mips64-ffbuild-linux-gnu \
-    FFBUILD_RUST_TARGET="mips64-unknown-linux-gnuabi64"
-
-RUN \
-    rustup default nightly && \
-    rustup +nightly component add rust-src && \
-    echo "[unstable]\nbuild-std = [\"core\", \"alloc\", \"std\", \"proc_macro\"]\n" > "$CARGO_HOME"/config.toml && \
-    echo "[target.$FFBUILD_RUST_TARGET]\nlinker = \"${FFBUILD_TOOLCHAIN}-gcc\"\nar = \"${FFBUILD_TOOLCHAIN}-gcc-ar\"\n" > "$CARGO_HOME"/config.toml
+ENV FFBUILD_TOOLCHAIN=mips64-ffbuild-linux-gnu
 
 ADD toolchain.cmake /toolchain.cmake
 ADD cross.meson /cross.meson

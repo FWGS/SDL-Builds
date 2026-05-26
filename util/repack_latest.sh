@@ -24,9 +24,7 @@ while [[ $# -gt 0 ]]; do
         rm -rf "$REPACK_DIR"
         mkdir "$REPACK_DIR"
 
-        if [[ $INPUT == *.zip ]]; then
-            unzip "$INPUT" -d "$REPACK_DIR"
-        elif [[ $INPUT == *.tar.xz ]]; then
+        if [[ $INPUT == *.tar.xz ]]; then
             tar xvaf "$INPUT" -C "$REPACK_DIR"
         else
             echo "Unknown input file type: $INPUT"
@@ -35,28 +33,14 @@ while [[ $# -gt 0 ]]; do
 
         cd "$REPACK_DIR"
 
-        INAME="$(echo ffmpeg-*)"
-        TAGNAME="$(cut -d- -f2 <<<"$INAME")"
-
-        if [[ $TAGNAME == N ]]; then
-            TAGNAME="master"
-        elif [[ $TAGNAME == n* ]]; then
-            TAGNAME="$(sed -re 's/([0-9]+\.[0-9]+).*/\1/' <<<"$TAGNAME")"
-        fi
-
-        if [[ "$INAME" =~ -[0-9]+-g ]]; then
-            ONAME="ffmpeg-$TAGNAME-latest-$(cut -d- -f5- <<<"$INAME")"
-        else
-            ONAME="ffmpeg-$TAGNAME-latest-$(cut -d- -f3- <<<"$INAME")"
-        fi
+        INAME="$(echo sdl*-*)"
+        PREFIX="${INAME%%-*}"
+        TAIL="$(grep -oE 'linux[a-z0-9]+(-.*)?$' <<<"$INAME")"
+        ONAME="${PREFIX}-latest-${TAIL}"
 
         mv "$INAME" "$ONAME"
 
-        if [[ $INPUT == *.zip ]]; then
-            zip -9 -r "$RELEASE_DIR/$ONAME.zip" "$ONAME"
-        elif [[ $INPUT == *.tar.xz ]]; then
-            tar cvJf "$RELEASE_DIR/$ONAME.tar.xz" "$ONAME"
-        fi
+        tar cvJf "$RELEASE_DIR/$ONAME.tar.xz" "$ONAME"
 
         rm -rf "$REPACK_DIR"
     ) &

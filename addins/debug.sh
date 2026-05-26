@@ -1,2 +1,2 @@
 #!/bin/bash
-FF_CONFIGURE="${FF_CONFIGURE/--disable-debug/} --optflags='-Og' --disable-stripping"
+SDL_CMAKE_FLAGS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )

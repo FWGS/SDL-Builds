@@ -119,23 +119,11 @@ get_filled_deps() {
     fi
 }
 
-get_output() {
-    (
-        SELF="$1"
-        source "$1"
-        if ffbuild_enabled; then
-            ffbuild_$2 || exit 0
-        else
-            ffbuild_un$2 || exit 0
-        fi
-    )
-}
-
 export TODF="Dockerfile"
 
 BASELAYER="base-layer"
 to_df "FROM ${REGISTRY}/${REPO}/base-${TARGET}:latest AS ${BASELAYER}"
-to_df "ENV TARGET=$TARGET VARIANT=$VARIANT REPO=$REPO ADDINS_STR=$ADDINS_STR FFVER=$(ffbuild_ffver)"
+to_df "ENV TARGET=$TARGET VARIANT=$VARIANT REPO=$REPO ADDINS_STR=$ADDINS_STR"
 to_df "COPY --link util/run_stage.sh /usr/bin/run_stage"
 
 for addin in "${ADDINS[@]}"; do
@@ -208,32 +196,8 @@ for SUBDEP in $(get_stagedeps_recursive "${ENTRYSCRIPT}"); do
         TODF="Dockerfile.final" PREVLAYER="$COMBINELAYER" \
             ffbuild_dockerfinal || exit $?
     )
-
-    for SCRIPT in "${SCRIPTS[@]}"; do
-        FF_CONFIGURE+=" $(get_output "$SCRIPT" configure)"
-        FF_CFLAGS+=" $(get_output "$SCRIPT" cflags)"
-        FF_CXXFLAGS+=" $(get_output "$SCRIPT" cxxflags)"
-        FF_LDFLAGS+=" $(get_output "$SCRIPT" ldflags)"
-        FF_LDEXEFLAGS+=" $(get_output "$SCRIPT" ldexeflags)"
-        FF_LIBS+=" $(get_output "$SCRIPT" libs)"
-    done
 done
 
 to_df "FROM ${BASELAYER}"
 sort -u < Dockerfile.final >> Dockerfile
 rm Dockerfile.final
-
-FF_CONFIGURE="$(xargs <<< "$FF_CONFIGURE")"
-FF_CFLAGS="$(xargs <<< "$FF_CFLAGS")"
-FF_CXXFLAGS="$(xargs <<< "$FF_CXXFLAGS")"
-FF_LDFLAGS="$(xargs <<< "$FF_LDFLAGS")"
-FF_LDEXEFLAGS="$(xargs <<< "$FF_LDEXEFLAGS")"
-FF_LIBS="$(xargs <<< "$FF_LIBS")"
-
-to_df "ENV \\"
-to_df "    FF_CONFIGURE=\"$FF_CONFIGURE\" \\"
-to_df "    FF_CFLAGS=\"$FF_CFLAGS\" \\"
-to_df "    FF_CXXFLAGS=\"$FF_CXXFLAGS\" \\"
-to_df "    FF_LDFLAGS=\"$FF_LDFLAGS\" \\"
-to_df "    FF_LDEXEFLAGS=\"$FF_LDEXEFLAGS\" \\"
-to_df "    FF_LIBS=\"$FF_LIBS\""

@@ -14,9 +14,8 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --enable-shared
-        --disable-static
-        --with-pic
+        --enable-static
+        --disable-shared
         --without-lint
     )
 
@@ -41,9 +40,6 @@ ffbuild_dockerbuild() {
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install DESTDIR="$FFBUILD_DESTDIR"
-
-    gen-implib "$FFBUILD_DESTPREFIX"/lib/{libXv.so.1,libXv.a}
-    rm "$FFBUILD_DESTPREFIX"/lib/libXv{.so*,.la}
 }
 
 ffbuild_configure() {

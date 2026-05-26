@@ -603,7 +603,7 @@ CT_LIBC_SUPPORT_THREADS_NATIVE=y
 CT_THREADS_NATIVE=y
 CT_CREATE_LDSO_CONF=y
 CT_LDSO_CONF_EXTRA_DIRS_ARRAY=""
-CT_LIBC_XLDD=y
+# CT_LIBC_XLDD is not set
 # end of C-library
 
 #
@@ -686,11 +686,11 @@ CT_GCC_REQUIRE_5_or_later=y
 CT_GCC_later_than_4_9=y
 CT_GCC_4_9_or_later=y
 CT_GCC_REQUIRE_4_9_or_later=y
-CT_CC_GCC_ENABLE_PLUGINS=y
+# CT_CC_GCC_ENABLE_PLUGINS is not set
 CT_CC_GCC_HAS_LIBMPX=y
 CT_CC_GCC_ENABLE_CXX_FLAGS=""
-CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY="--enable-host-shared --enable-default-ssp"
-CT_CC_GCC_EXTRA_CONFIG_ARRAY="--enable-host-shared --enable-default-ssp --with-build-config=bootstrap-lto-lean --enable-link-serialization=2"
+CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY="--enable-default-ssp"
+CT_CC_GCC_EXTRA_CONFIG_ARRAY="--enable-default-ssp"
 # CT_CC_GCC_STATIC_LIBSTDCXX is not set
 # CT_CC_GCC_SYSTEM_ZLIB is not set
 CT_CC_GCC_CONFIG_TLS=m
@@ -1065,39 +1065,7 @@ CT_MPFR_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
 CT_MPFR_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
 CT_MPFR_ARCHIVE_FORMATS=".tar.xz .tar.bz2 .tar.gz .zip"
 CT_MPFR_SIGNATURE_FORMAT="packed/.asc"
-CT_COMP_LIBS_NCURSES=y
-CT_COMP_LIBS_NCURSES_PKG_KSYM="NCURSES"
-CT_NCURSES_DIR_NAME="ncurses"
-CT_NCURSES_PKG_NAME="ncurses"
-CT_NCURSES_SRC_RELEASE=y
-# CT_NCURSES_SRC_DEVEL is not set
-# CT_NCURSES_SRC_CUSTOM is not set
-CT_NCURSES_PATCH_GLOBAL=y
-# CT_NCURSES_PATCH_BUNDLED is not set
-# CT_NCURSES_PATCH_LOCAL is not set
-# CT_NCURSES_PATCH_BUNDLED_LOCAL is not set
-# CT_NCURSES_PATCH_LOCAL_BUNDLED is not set
-# CT_NCURSES_PATCH_NONE is not set
-CT_NCURSES_PATCH_ORDER="global"
-CT_NCURSES_V_6_5=y
-# CT_NCURSES_V_6_4 is not set
-# CT_NCURSES_V_6_2 is not set
-# CT_NCURSES_V_6_1 is not set
-# CT_NCURSES_V_6_0 is not set
-CT_NCURSES_VERSION="6.5"
-CT_NCURSES_MIRRORS="https://invisible-mirror.net/archives/ncurses $(CT_Mirrors GNU ncurses)"
-CT_NCURSES_ARCHIVE_FILENAME="@{pkg_name}-@{version}"
-CT_NCURSES_ARCHIVE_DIRNAME="@{pkg_name}-@{version}"
-CT_NCURSES_ARCHIVE_FORMATS=".tar.gz"
-CT_NCURSES_SIGNATURE_FORMAT="packed/.asc"
-# CT_NCURSES_NEW_ABI is not set
-CT_NCURSES_HOST_CONFIG_ARGS=""
-CT_NCURSES_HOST_DISABLE_DB=y
-CT_NCURSES_HOST_FALLBACKS="linux,xterm,xterm-color,xterm-256color,vt100"
-CT_NCURSES_TARGET_CONFIG_ARGS=""
-# CT_NCURSES_TARGET_DISABLE_DB is not set
-CT_NCURSES_TARGET_FALLBACKS=""
-CT_NCURSES_EXTRA_CFLAGS="-std=gnu17"
+# CT_COMP_LIBS_NCURSES is not set
 CT_COMP_LIBS_ZLIB=y
 CT_COMP_LIBS_ZLIB_PKG_KSYM="ZLIB"
 CT_ZLIB_DIR_NAME="zlib"
@@ -1152,7 +1120,6 @@ CT_MPFR_NEEDED=y
 CT_ISL_NEEDED=y
 CT_MPC_NEEDED=y
 CT_EXPAT_NEEDED=y
-CT_NCURSES_NEEDED=y
 CT_ZLIB_NEEDED=y
 CT_ZSTD_NEEDED=y
 CT_LIBICONV=y
@@ -1162,7 +1129,6 @@ CT_MPFR=y
 CT_ISL=y
 CT_MPC=y
 CT_EXPAT=y
-CT_NCURSES=y
 CT_ZLIB=y
 CT_ZSTD=y
 # end of Companion libraries
@@ -1177,6 +1143,7 @@ CT_ZSTD=y
 # CT_COMP_TOOLS_DTC is not set
 # CT_COMP_TOOLS_LIBTOOL is not set
 # CT_COMP_TOOLS_M4 is not set
+
 CT_COMP_TOOLS_MAKE=y
 CT_COMP_TOOLS_MAKE_PKG_KSYM="MAKE"
 CT_MAKE_DIR_NAME="make"
@@ -1191,7 +1158,6 @@ CT_MAKE_PATCH_GLOBAL=y
 # CT_MAKE_PATCH_LOCAL_BUNDLED is not set
 # CT_MAKE_PATCH_NONE is not set
 CT_MAKE_PATCH_ORDER="global"
-# CT_MAKE_V_4_4 is not set
 CT_MAKE_V_4_3=y
 CT_MAKE_VERSION="4.3"
 CT_MAKE_MIRRORS="$(CT_Mirrors GNU make)"
@@ -1201,6 +1167,7 @@ CT_MAKE_ARCHIVE_FORMATS=".tar.lz .tar.gz"
 CT_MAKE_SIGNATURE_FORMAT="packed/.sig"
 CT_MAKE_4_4_or_older=y
 CT_MAKE_older_than_4_4=y
+CT_MAKE_REQUIRE_older_than_4_4=y
 CT_MAKE_4_3_or_later=y
 CT_MAKE_4_3_or_older=y
 CT_MAKE_GMAKE_SYMLINK=y

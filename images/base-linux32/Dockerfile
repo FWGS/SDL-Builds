@@ -1,4 +1,4 @@
-ARG GH_REPO=ghcr.io/fwgs/ffmpeg-builds
+ARG GH_REPO=ghcr.io/fwgs/sdl-builds
 FROM $GH_REPO/base:latest
 
 RUN --mount=src=ct-ng-config,dst=/.config \
@@ -33,14 +33,7 @@ RUN \
         \) -delete && \
     mkdir /opt/ffbuild
 
-ENV FFBUILD_TOOLCHAIN=i686-ffbuild-linux-gnu \
-    FFBUILD_RUST_TARGET="i686-unknown-linux-gnu"
-
-#RUN \
-#    rustup default nightly && \
-#    echo "[unstable]\ntarget-applies-to-host = true\nhost-config = true\n" > "$CARGO_HOME"/config.toml && \
-#    echo "[target.$FFBUILD_RUST_TARGET]\nlinker = \"${FFBUILD_TOOLCHAIN}-gcc\"\nar = \"${FFBUILD_TOOLCHAIN}-gcc-ar\"\n" >> "$CARGO_HOME"/config.toml && \
-#    echo "[target.host]\nlinker = \"gcc\"\nar = \"ar\"\n" >> "$CARGO_HOME"/config.toml
+ENV FFBUILD_TOOLCHAIN=i686-ffbuild-linux-gnu
 
 ADD toolchain.cmake /toolchain.cmake
 ADD cross.meson /cross.meson

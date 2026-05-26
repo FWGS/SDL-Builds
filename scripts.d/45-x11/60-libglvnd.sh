@@ -14,7 +14,7 @@ ffbuild_dockerbuild() {
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
         --buildtype=release
-        --default-library=static
+        --default-library=shared
         -Dasm=enabled
         -Dx11=enabled
         -Degl=true
@@ -33,7 +33,20 @@ ffbuild_dockerbuild() {
         return -1
     fi
 
+    export CFLAGS="$RAW_CFLAGS"
+    export LDFLAGS="$RAW_LDFLAGS"
+    export PKG_CONFIG="pkg-config --static"
+
     meson "${myconf[@]}" ..
     ninja -j"$(nproc)"
     DESTDIR="$FFBUILD_DESTDIR" ninja install
+
+    # SDL wants to link to OpenGL during configure stage
+    # let's just generate stub implib so it passes the config but contains no glvnd code
+    # and prevents any attempt to link to libGL
+    for LIBNAME in libEGL.so.1 libGL.so.1 libGLX.so.0 libGLESv1_CM.so.1 libGLESv2.so.2 libOpenGL.so.0; do
+        BASE="${LIBNAME%%.so*}"
+        gen-implib "$FFBUILD_DESTPREFIX"/lib/{$LIBNAME,$BASE.a}
+        rm -f "$FFBUILD_DESTPREFIX"/lib/${BASE}{.so*,.la}
+    done
 }

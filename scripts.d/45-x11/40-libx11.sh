@@ -13,9 +13,8 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --enable-shared
-        --disable-static
-        --with-pic
+        --enable-static
+        --disable-shared
         --without-xmlto
         --without-fop
         --without-xsltproc
@@ -47,8 +46,4 @@ ffbuild_dockerbuild() {
     make install DESTDIR="$FFBUILD_DESTDIR"
 
     echo "Libs: -ldl" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/x11.pc
-
-    gen-implib "$FFBUILD_DESTPREFIX"/lib/{libX11-xcb.so.1,libX11-xcb.a}
-    gen-implib "$FFBUILD_DESTPREFIX"/lib/{libX11.so.6,libX11.a}
-    rm "$FFBUILD_DESTPREFIX"/lib/libX11{,-xcb}{.so*,.la}
 }

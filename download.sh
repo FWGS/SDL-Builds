@@ -3,7 +3,7 @@ set -xe
 cd "$(dirname "$0")"
 source util/vars.sh dl only
 
-if docker info -f "{{println .SecurityOptions}}" | grep rootless >/dev/null 2>&1; then
+if docker info 2>/dev/null | grep -qEi 'rootless|podman'; then
     UIDARGS=()
 else
     UIDARGS=( -u "$(id -u):$(id -g)" )

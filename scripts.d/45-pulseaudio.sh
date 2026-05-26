@@ -7,8 +7,6 @@ ffbuild_depends() {
     echo base
     echo libiconv
     echo libsamplerate
-    echo soxr
-    echo openssl
 }
 
 ffbuild_enabled() {
@@ -41,7 +39,7 @@ ffbuild_dockerbuild() {
         -Dman=false
         -Dtests=disabled
         -Dipv6=true
-        -Dopenssl=enabled
+        -Dopenssl=disabled
     )
 
     if [[ $TARGET == linux* ]]; then
@@ -58,6 +56,29 @@ ffbuild_dockerbuild() {
     DESTDIR="$FFBUILD_DESTDIR" ninja install
 
     rm -r "$FFBUILD_DESTPREFIX"/share
+
+    # HACKHACK: because we want to statically link with libpulse
+    # repackage it so all dependencies get resolved
+    # (which usually is not the problem in dynamic linking case)
+    local AR="${FFBUILD_TOOLCHAIN}-ar"
+    local tmp
+    for LIB in libpulse libpulse-simple; do
+        local PC=( "$FFBUILD_DESTPREFIX"/lib/pulseaudio/libpulsecommon-*.a )
+        [[ -f "${PC[0]}" ]] || continue
+        tmp="$(mktemp -d)"
+        ( cd "$tmp" && \
+          "$AR" x "$FFBUILD_DESTPREFIX"/lib/${LIB}.a && \
+          "$AR" x "${PC[0]}" && \
+          "$AR" rcs "$FFBUILD_DESTPREFIX"/lib/${LIB}.a *.o )
+        rm -rf "$tmp"
+    done
+    rm -rf "$FFBUILD_DESTPREFIX"/lib/pulseaudio
+
+    sed -i \
+        -e 's| *-lpulsecommon-[0-9.]*||g' \
+        -e 's| *-L\${libdir}/pulseaudio||g' \
+        "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc \
+        "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
 
     echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc
     echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc

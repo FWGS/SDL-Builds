@@ -13,9 +13,8 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --enable-shared
-        --disable-static
-        --with-pic
+        --enable-static
+        --disable-shared
     )
 
     if [[ $TARGET == linuxarm64 ]]; then
@@ -39,7 +38,4 @@ ffbuild_dockerbuild() {
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install DESTDIR="$FFBUILD_DESTDIR"
-
-    gen-implib "$FFBUILD_DESTPREFIX"/lib/{libXi.so.6,libXi.a}
-    rm "$FFBUILD_DESTPREFIX"/lib/libXi{.so*,.la}
 }

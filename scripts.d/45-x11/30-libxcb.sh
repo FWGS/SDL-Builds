@@ -13,9 +13,8 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --enable-shared
-        --disable-static
-        --with-pic
+        --enable-static
+        --disable-shared
         --disable-devel-docs
     )
 
@@ -34,11 +33,6 @@ ffbuild_dockerbuild() {
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install DESTDIR="$FFBUILD_DESTDIR"
-
-    for LIBNAME in "$FFBUILD_DESTPREFIX"/lib/libxcb*.so.?; do
-        gen-implib "$LIBNAME" "${LIBNAME%%.*}.a"
-        rm "${LIBNAME%%.*}"{.so*,.la}
-    done
 }
 
 ffbuild_configure() {

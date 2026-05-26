@@ -10,6 +10,7 @@ RUN \
         $([ "$TARGETPLATFORM" != "linux/amd64" ] || echo gcc-multilib g++-multilib) \
         build-essential yasm nasm \
         xxd pkgconf curl wget unzip zip git subversion mercurial rsync jq \
+        libwayland-bin libwayland-dev \
         autoconf automake libtool libtool-bin autopoint gettext cmake ninja-build \
         clang llvm lcov lld qemu-user \
         texinfo texi2html help2man flex bison groff \
@@ -27,10 +28,6 @@ RUN \
     git config --global advice.detachedHead false
 
 RUN python3 -m pip install --break-system-packages meson
-
-ENV CARGO_HOME="/opt/cargo" RUSTUP_HOME="/opt/rustup" PATH="/opt/cargo/bin:${PATH}"
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y --no-modify-path && \
-    cargo install cargo-c && rm -rf "${CARGO_HOME}"/registry "${CARGO_HOME}"/git
 
 RUN --mount=src=.,dst=/input \
     for s in /input/*.sh; do cp $s /usr/bin/$(echo $s | sed -e 's|.*/||' -e 's/\.sh$//'); done
