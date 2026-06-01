@@ -33,15 +33,26 @@ ffbuild_dockerbuild() {
         myconf+=( --cross-file=/cross.meson )
     fi
 
-    export PKG_CONFIG_PATH_FOR_BUILD="/usr/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig"
-
     export CFLAGS="$RAW_CFLAGS"
     export LDFLAGS="$RAW_LDFLAGS"
+
+    # HACKHACK: the meson users (as in projects using meson) is doing a dumbest thnig ever
+    #  and don't let override _native_ mind you wayland-scanner binary through envvar
+    # for this case generate a stub .pc pointing at the host wayland-scanner
+    mkdir -p "$FFBUILD_PREFIX"/lib/pkgconfig "$FFBUILD_DESTPREFIX"/lib/pkgconfig
+    cat > "$FFBUILD_PREFIX"/lib/pkgconfig/wayland-scanner.pc <<'EOF'
+prefix=/usr
+bindir=${prefix}/bin
+wayland_scanner=${bindir}/wayland-scanner
+
+Name: Wayland Scanner
+Description: stub pointing at host wayland-scanner
+Version: 1.24.0
+EOF
+    cp "$FFBUILD_PREFIX"/lib/pkgconfig/wayland-scanner.pc \
+       "$FFBUILD_DESTPREFIX"/lib/pkgconfig/wayland-scanner.pc
 
     meson setup "${myconf[@]}" ..
     ninja -j"$(nproc)"
     DESTDIR="$FFBUILD_DESTDIR" ninja install
-
-    sed -i -e 's|^wayland_scanner=.*|wayland_scanner=/usr/bin/wayland-scanner|' \
-        "$FFBUILD_DESTPREFIX"/lib/pkgconfig/wayland-scanner.pc 2>/dev/null || true
 }

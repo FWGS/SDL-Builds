@@ -50,7 +50,6 @@ ENV PATH="/opt/ct-ng/bin:${PATH}" \
     FFBUILD_CMAKE_TOOLCHAIN=/toolchain.cmake \
     PKG_CONFIG=pkg-config \
     PKG_CONFIG_LIBDIR=/opt/ffbuild/lib/pkgconfig:/opt/ffbuild/share/pkgconfig \
-    PKG_CONFIG_PATH_FOR_BUILD=/usr/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig \
     CC="${FFBUILD_TOOLCHAIN}-gcc" \
     CXX="${FFBUILD_TOOLCHAIN}-g++" \
     LD="${FFBUILD_TOOLCHAIN}-ld" \
