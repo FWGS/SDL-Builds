@@ -22,6 +22,11 @@ mkdir ffbuild
 BUILD_SCRIPT="$(mktemp)"
 trap "rm -f -- '$BUILD_SCRIPT'" EXIT
 
+PATCH_DIRS=()
+for addin in "${ADDINS[@]}"; do
+    [[ -d "patches/$addin" ]] && PATCH_DIRS+=( "patches/$addin" )
+done
+
 cat <<EOF >"$BUILD_SCRIPT"
     set -xe
     cd /ffbuild
@@ -31,6 +36,12 @@ cat <<EOF >"$BUILD_SCRIPT"
     cd sdl
     SDL_VERSION="\$(git describe --tags --always)"
     echo "\$SDL_VERSION" > /ffbuild/sdl.version
+
+    for d in ${PATCH_DIRS[*]}; do
+        for p in /patches/\${d#patches/}/*.patch; do
+            [[ -f "\$p" ]] && git am "\$p"
+        done
+    done
 
     export PKG_CONFIG="pkg-config --static"
 
@@ -50,7 +61,10 @@ EOF
 
 [[ -t 1 ]] && TTY_ARG="-t" || TTY_ARG=""
 
-docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild -v "$BUILD_SCRIPT":/build.sh "$IMAGE" bash /build.sh
+PATCH_MOUNT=()
+[[ ${#PATCH_DIRS[@]} -gt 0 ]] && PATCH_MOUNT=( -v "$PWD/patches":/patches:ro )
+
+docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild -v "$BUILD_SCRIPT":/build.sh "${PATCH_MOUNT[@]}" "$IMAGE" bash /build.sh
 
 SDL_VERSION="$(cat ffbuild/sdl.version)"
 
