@@ -15,7 +15,7 @@ ffbuild_dockerbuild() {
         --prefix="$FFBUILD_PREFIX"
         --buildtype=release
         --default-library=shared
-        -Dasm=enabled
+        -Dasm=disabled
         -Dx11=enabled
         -Degl=true
         -Dglx=enabled
