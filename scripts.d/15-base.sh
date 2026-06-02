@@ -6,6 +6,7 @@ ffbuild_depends() {
     echo mingw
     echo mingw-std-threads
     echo xorg-macros
+    echo fake-libdl
 }
 
 ffbuild_enabled() {
