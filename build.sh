@@ -39,7 +39,7 @@ cat <<EOF >"$BUILD_SCRIPT"
 
     for d in ${PATCH_DIRS[*]}; do
         for p in /patches/\${d#patches/}/*.patch; do
-            [[ -f "\$p" ]] && git am "\$p"
+            [[ -f "\$p" ]] && git -c user.email=ci@ffbuild -c user.name=ffbuild am "\$p"
         done
     done
 
