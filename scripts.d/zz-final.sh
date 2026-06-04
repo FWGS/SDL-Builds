@@ -5,7 +5,6 @@ SCRIPT_SKIP="1"
 ffbuild_depends() {
     echo base
     echo zlib
-    echo libiconv
     echo libsamplerate
     echo pulseaudio
     echo alsa

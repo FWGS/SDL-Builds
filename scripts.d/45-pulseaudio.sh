@@ -5,7 +5,6 @@ SCRIPT_COMMIT="b096704c0d42c5e784deb781a07b23cfb5286a82"
 
 ffbuild_depends() {
     echo base
-    echo libiconv
     echo libsamplerate
 }
 
@@ -80,8 +79,8 @@ ffbuild_dockerbuild() {
         "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc \
         "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
 
-    echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc
-    echo "Libs.private: -ldl -lrt -liconv" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
+    echo "Libs.private: -ldl -lrt" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse.pc
+    echo "Libs.private: -ldl -lrt" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libpulse-simple.pc
 }
 
 ffbuild_configure() {
