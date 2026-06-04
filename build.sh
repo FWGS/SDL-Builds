@@ -47,11 +47,13 @@ cat <<EOF >"$BUILD_SCRIPT"
 
     mkdir build && cd build
     # HACKHACK: link X11 dependencies manually
+    # HACKHACK: hide static-archive symbols so system libGL/libEGL don't grab our embedded libX11/libwayland
     cmake -GNinja \
         -DCMAKE_TOOLCHAIN_FILE="\$FFBUILD_CMAKE_TOOLCHAIN" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/ffbuild/prefix \
         -DCMAKE_C_STANDARD_LIBRARIES="-Wl,--start-group -lxcb -lXau -lXrender -Wl,--end-group" \
+        -DCMAKE_SHARED_LINKER_FLAGS="-Wl,--exclude-libs,ALL" \
         ${SDL_CMAKE_FLAGS[@]} \
         ..
 
